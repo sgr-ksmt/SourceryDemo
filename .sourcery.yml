@@ -1,0 +1,6 @@
+sources:
+  - "SourceryDemo/Sources/LogEvents.swift"
+templates:
+  - "Templates"
+output:
+  "SourceryDemo/Sources/"

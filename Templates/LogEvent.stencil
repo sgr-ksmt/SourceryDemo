@@ -1,0 +1,24 @@
+{% for enum in types.enums %}extension {{ enum.name }} {
+    var eventName: String {
+        switch self {
+        {% for case in enum.cases %}
+        case .{{ case.name }}: return "{{ case.name|camelToSnakeCase }}"
+        {% endfor %}
+        }
+    }
+    var parameters: [Parameter: Any?] {
+        {% if enum.hasAssociatedValues %}
+        switch self {
+        {% for case in enum.cases %}
+            {% if case.hasAssociatedValue %}
+        case let .{{ case.name }}({% for value in case.associatedValues %}{{ value.localName }}{% if not forloop.last %}, {% endif %}{% endfor %}): return [{% for value in case.associatedValues %}.{{ value.localName }}: {{ value.localName }}{% if not forloop.last %}, {% endif %}{% endfor %}]
+            {% endif %}
+        {% endfor %}
+        {% if enum.cases.count > 1 %}default: return [:]{% endif %}
+        }
+        {% else %}
+        return [:]
+        {% endif %}
+    }
+}
+{% endfor %}
